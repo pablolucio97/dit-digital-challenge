@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import UserCard from "./components/UserCard";
 
@@ -235,6 +236,12 @@ const Users: React.FC = () => {
     },
   ];
 
+  const navigate = useNavigate();
+
+  const handleSeeAlbum = () => {
+    navigate("/albums");
+  };
+
   return (
     <main className="w-full flex flex-col pt-[4rem]">
       <Header pageTitle="Users" />
@@ -242,11 +249,7 @@ const Users: React.FC = () => {
         <h1 className="text-lg md:text-2xl font-bold ml-4">Users</h1>
         <div className="flex flex-col w-full p-4 my-3 md:max-h-[44rem] overflow-auto">
           {mockedUsers.map((user) => (
-            <UserCard
-              key={user.id}
-              user={user}
-              onSeeAlbums={() => console.log("See albums")}
-            />
+            <UserCard key={user.id} user={user} onSeeAlbums={handleSeeAlbum} />
           ))}
         </div>
       </div>
