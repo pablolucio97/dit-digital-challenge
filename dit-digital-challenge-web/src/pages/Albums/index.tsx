@@ -59,6 +59,7 @@ const Albums: React.FC = () => {
               key={album.id}
               title={album.title}
               onSeeAlbum={handleSeeAlbumPhotos}
+              showControls
             />
           ))}
         </div>

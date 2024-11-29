@@ -46,7 +46,7 @@ const Photos: React.FC = () => {
         </div>
         <div className="grid grid-cols-2  md:grid-cols-3 gap-4 mt-8">
           {mockedPhotos.map((photo) => (
-            <PhotoCard key={photo.id} url={photo.url} />
+            <PhotoCard key={photo.id} url={photo.url} showControls />
           ))}
         </div>
       </div>
