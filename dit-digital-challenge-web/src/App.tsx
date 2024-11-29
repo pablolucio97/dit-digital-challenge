@@ -1,8 +1,10 @@
+import AppRouter from "./routes";
 import "./styles/globals.css";
+
 function App() {
   return (
-    <div>
-      <h1 className="m-4">DTI Digital Challenge - Pablo</h1>
+    <div className="h-screen w-full bg-gray-100">
+      <AppRouter />
     </div>
   );
 }
