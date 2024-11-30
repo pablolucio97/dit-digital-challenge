@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: dti-digital-db
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: dti-digital-db
+      PGDATA: /data/postgres
+    volumes:
+      - ./data/pg:/data/postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d dti-digital-db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  dti-digital-server-app:
+    container_name: dti-digital-server-app
+    image: node:20-alpine
+    working_dir: /usr/src/app
+    command: ["npm", "run", "start:dev"]
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - 3335:3335
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://admin:admin@dti-digital-db:5432/dti-digital-db?schema=public
