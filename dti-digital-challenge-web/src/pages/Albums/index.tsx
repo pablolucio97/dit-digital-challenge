@@ -1,36 +1,79 @@
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { MdAddCircleOutline } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import ErrorFeedback from "../../components/ErrorFeedback";
 import Header from "../../components/Header";
+import LoadingIndicator from "../../components/LoadingIndicator";
+import NoDataFeedback from "../../components/NoDataFeedback";
 import { Button } from "../../components/ui/button";
+import { AlbumDTO } from "../../repositories/dtos/albumsDTO";
+import { UserDTO } from "../../repositories/dtos/usersDTO";
+import { AlbumsRepositoryImplementation } from "../../repositories/implementation/albumsRepository";
+import { UsersRepositoryImplementation } from "../../repositories/implementation/usersRepository";
+import { useAuthenticationStore } from "../../store/auth";
 import AlbumCard from "./AlbumCard";
 import CreateAlbumModal from "./CreateAlbumModal";
 
 const Albums: React.FC = () => {
   const [createAlbumModal, setCreateAlbumModal] = useState(false);
+  const [albums, setAlbums] = useState<AlbumDTO[]>([]);
+  const [user, setUser] = useState<UserDTO | null>(null);
 
-  const mockedAlbums = [
-    {
-      id: "1",
-      title: "Spring",
-    },
-    {
-      id: "2",
-      title: "Summer",
-    },
-    {
-      id: "3",
-      title: "Chicago Trip",
-    },
-    {
-      id: "4",
-      title: "London",
-    },
-    {
-      id: "4",
-      title: "Winter",
-    },
-  ];
+  const [searchParams] = useSearchParams();
+
+  const userId = useMemo(
+    () => Number(searchParams.get("userId")),
+    [searchParams]
+  );
+
+  const { user: authenticatedUser } = useAuthenticationStore();
+
+  const albumsRepository = useMemo(() => {
+    return new AlbumsRepositoryImplementation();
+  }, []);
+
+  const usersRepository = useMemo(() => {
+    return new UsersRepositoryImplementation();
+  }, []);
+
+  const getAlbums = useCallback(async () => {
+    try {
+      const albums = await albumsRepository.listAlbumsByUser(userId);
+      setAlbums(albums);
+      return albums;
+    } catch (error) {
+      console.log(error);
+    }
+  }, [albumsRepository, userId]);
+
+  const getUser = useCallback(async () => {
+    try {
+      const user = await usersRepository.getUser(userId);
+      setUser(user);
+      return user;
+    } catch (error) {
+      console.log(error);
+    }
+  }, [userId, usersRepository]);
+
+  const { isLoading: isUserLoading, error: userError } = useQuery({
+    queryKey: ["user", userId],
+    queryFn: getUser,
+  });
+
+  const { isLoading: isAlbumsLoading, error: albumsError } = useQuery({
+    queryKey: ["albums", userId],
+    queryFn: getAlbums,
+  });
+
+  useEffect(() => {
+    getAlbums();
+  }, [getAlbums]);
+
+  useEffect(() => {
+    getUser();
+  }, [getUser]);
 
   const navigate = useNavigate();
 
@@ -42,36 +85,74 @@ const Albums: React.FC = () => {
     setCreateAlbumModal(!createAlbumModal);
   };
 
+  const isLoading = isUserLoading || isAlbumsLoading;
+  const error = userError || albumsError;
+
   return (
-    <main className="w-full flex flex-col pt-[4rem]">
+    <main className="w-full flex flex-col pt-[4rem] ">
       <Header pageTitle="Albums" />
-      <div className="w-full max-w-[1080px] flex flex-col mx-auto mt-4 p-4">
+      <div className="w-full max-w-[1080px] flex flex-col items-center mx-auto mt-4 p-4">
         <div className="flex flex-col md:flex-row w-full justify-between items-start md:items-center">
           <div className="flex flex-col  ">
-            <h1 className="text-lg md:text-2xl font-bold">My albums - Pablo</h1>
-            <span className="mt-2 text-xs md:text-sm">
-              Showing Pablo's albums - pablo@gmail.com
-            </span>
+            {user && (
+              <div>
+                <h1 className="text-lg md:text-2xl font-bold">
+                  Albums - {user.name}
+                </h1>
+                <span className="mt-2 text-xs md:text-sm">
+                  {`Showing ${user.name}'s albums - ${user.email}`}
+                </span>
+              </div>
+            )}
           </div>
           <Button
             className="bg-secondary text-md font-bold text-sm md:text-md mt-3 md:mt-[0] hover:bg-secondary"
             size="lg"
             onClick={handleToggleCreateAlbumModal}
+            disabled={userId !== authenticatedUser.id}
           >
             <MdAddCircleOutline className="w-[2rem] h-[2rem]" />
             Create album
           </Button>
         </div>
-        <div className="grid grid-cols-2  md:grid-cols-3 gap-4 mt-8">
-          {mockedAlbums.map((album) => (
-            <AlbumCard
-              key={album.id}
-              title={album.title}
-              onSeeAlbum={handleSeeAlbumPhotos}
-              showControls
-            />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="w-full h-full mt-[4rem]">
+            <LoadingIndicator />
+          </div>
+        ) : error ? (
+          <div className="w-full h-full mt-[4rem]">
+            <ErrorFeedback />
+          </div>
+        ) : (
+          <div
+            className={
+              albums.length > 0
+                ? "w-full items-center justify-center grid grid-cols-2  md:grid-cols-3 gap-4 mt-8"
+                : "w-full flex items-center justify-center mt-8"
+            }
+          >
+            {albums.length > 0 ? (
+              albums.map((album) => (
+                <AlbumCard
+                  key={album.id}
+                  title={album.title}
+                  onSeeAlbum={handleSeeAlbumPhotos}
+                  showControls={userId === authenticatedUser.id}
+                />
+              ))
+            ) : (
+              <div className="w-full flex flex-col mt-[4rem]">
+                <NoDataFeedback
+                  message={
+                    userId === authenticatedUser.id
+                      ? "You have not albums created."
+                      : "This user has no albums created."
+                  }
+                />
+              </div>
+            )}
+          </div>
+        )}
       </div>
       <CreateAlbumModal
         isOpen={createAlbumModal}

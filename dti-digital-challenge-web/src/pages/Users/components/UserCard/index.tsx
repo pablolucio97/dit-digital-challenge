@@ -10,7 +10,7 @@ type User = {
 
 interface UserCardProps {
   user: User;
-  onSeeAlbums: () => void;
+  onSeeAlbums: (userId: string) => void;
   onAuthenticate: () => void;
   isAuthenticated: boolean;
   onSignOut: () => void;
@@ -68,7 +68,7 @@ const UserCard: React.FC<UserCardProps> = ({
           {renderAuthenticateButton()}
           <button
             className="bg-primary rounded-md p-2 text-white font-bold flex justify-center items-center min-w-[6rem] text-xs md:text-sm disabled:opacity-60"
-            onClick={onSeeAlbums}
+            onClick={() => onSeeAlbums(user.id.toString())}
             disabled={!isAuthenticated}
           >
             See albums

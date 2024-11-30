@@ -37,8 +37,8 @@ const Users: React.FC = () => {
     getUsers();
   }, [getUsers]);
 
-  const handleSeeAlbum = () => {
-    navigate("/albums");
+  const handleSeeAlbums = (userId: string) => {
+    navigate(`/albums?userId=${userId}`);
   };
 
   const handleAuthenticate = (user: UserDTO) => {
@@ -68,7 +68,7 @@ const Users: React.FC = () => {
               <UserCard
                 key={user.id}
                 user={user}
-                onSeeAlbums={handleSeeAlbum}
+                onSeeAlbums={() => handleSeeAlbums(user.id.toString())}
                 isAuthenticated={isAuthenticated}
                 onAuthenticate={() => handleAuthenticate(user)}
                 onSignOut={handleSignOut}

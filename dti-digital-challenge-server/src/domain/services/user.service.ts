@@ -19,4 +19,19 @@ export class UsersService implements UsersRepository {
       return [];
     }
   }
+
+  async getUser(id: number): Promise<UserDTO | null> {
+    try {
+      const { data } = await axios.get<UserDTO | null>(
+        `https://jsonplaceholder.typicode.com/users/${id}`,
+      );
+      if (data) {
+        return data;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      return null;
+    }
+  }
 }

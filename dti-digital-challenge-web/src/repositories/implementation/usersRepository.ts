@@ -9,4 +9,10 @@ export class UsersRepositoryImplementation implements UsersRepository {
     );
     return response.data.RES;
   }
+  async getUser(id: number): Promise<UserDTO> {
+    const response = await api.get<IApiSuccessResponse<UserDTO>>(
+      `users/get/${id}`
+    );
+    return response.data.RES;
+  }
 }

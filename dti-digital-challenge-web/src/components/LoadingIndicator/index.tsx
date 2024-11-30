@@ -6,7 +6,7 @@ interface LoadingIndicatorProps {
 
 const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({ message }) => {
   return (
-    <div className="flex flex-col items-center mx-auto ">
+    <div className="w-full flex flex-col items-center mx-auto ">
       <MdOutlineMotionPhotosOn className="w-6 h-6 md:w-8 md:h-8 animate-spin mb-2" />
       <span className="text-sm md:text-[1rem]">
         {message ?? "Loading data..."}
