@@ -5,11 +5,11 @@ import { DeleteAlbumUseCase } from 'src/domain/useCases/albums/deleteAlbumUseCas
 import { GetAlbumUseCase } from 'src/domain/useCases/albums/getAlbumUseCase';
 import { ListAlbumsUseCase } from 'src/domain/useCases/albums/listAlbumsUseCase';
 import { UpdateAlbumUseCase } from 'src/domain/useCases/albums/updateAlbumUseCase';
-import { CreateAlbumController } from '../http/controllers/createAlbumController';
-import { DeleteAlbumController } from '../http/controllers/deleteAlbumController';
-import { GetAlbumController } from '../http/controllers/getAlbumController';
-import { ListAlbumsController } from '../http/controllers/listAlbumsController';
-import { UpdateAlbumController } from '../http/controllers/updateAlbumController';
+import { CreateAlbumController } from '../http/controllers/albums/createAlbumController';
+import { DeleteAlbumController } from '../http/controllers/albums/deleteAlbumController';
+import { GetAlbumController } from '../http/controllers/albums/getAlbumController';
+import { ListAlbumsController } from '../http/controllers/albums/listAlbumsController';
+import { UpdateAlbumController } from '../http/controllers/albums/updateAlbumController';
 import { PrismaService } from '../services/PrismaService';
 
 @Module({
