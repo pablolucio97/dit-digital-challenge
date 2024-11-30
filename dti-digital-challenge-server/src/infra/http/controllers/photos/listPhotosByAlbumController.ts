@@ -14,10 +14,10 @@ export class ListPhotosByAlbumController {
   @HttpCode(200)
   async handle(@Param('albumId') albumId: string) {
     try {
-      const photo = await this.listPhotosUseCase.execute(parseInt(albumId));
+      const photos = await this.listPhotosUseCase.execute(parseInt(albumId));
       return {
         STATUS: 'Success',
-        RES: photo,
+        RES: photos,
       };
     } catch (error) {
       console.log('[INTERNAL ERROR]', error.message);
