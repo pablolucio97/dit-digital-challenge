@@ -48,7 +48,7 @@ const Users: React.FC = () => {
           <div className="w-full h-full mt-[4rem]">
             <LoadingIndicator />
           </div>
-        ) : !error ? (
+        ) : error ? (
           <div className="w-full h-full mt-[4rem]">
             <ErrorFeedback />
           </div>
