@@ -17,10 +17,14 @@ const AlbumCard: React.FC<AlbumCardProps> = ({
   onSeeAlbum,
 }) => {
   return (
-    <div
-      className="w-full min-h-[12rem] flex items-center justify-center p-4  bg-gradient-to-r from-primary to-[#6BE0EF] cursor-pointer rounded-md relative"
-      onClick={onSeeAlbum}
-    >
+    <div className="w-full min-h-[12rem] flex items-center justify-center p-4  bg-gradient-to-r from-primary to-[#6BE0EF] rounded-md relative">
+      <Button
+        className="absolute top-2 left-2 bg-transparent hover:bg-transparent font-bold"
+        variant="ghost"
+        onClick={onSeeAlbum}
+      >
+        See album
+      </Button>
       {showControls && (
         <>
           <Button

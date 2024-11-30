@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { MdOutlineMotionPhotosOn } from "react-icons/md";
 import Modal from "react-modal";
 import TextInput from "../../../components/TextInput";
@@ -9,6 +10,8 @@ interface CreateAlbumModalProps {
   onConfirmAction: (param: unknown) => void;
   onClose: () => void;
   isLoading?: boolean;
+  albumTitle: string;
+  setAlbumTitle: Dispatch<SetStateAction<string>>;
 }
 
 const CreateAlbumModal: React.FC<CreateAlbumModalProps> = ({
@@ -16,6 +19,8 @@ const CreateAlbumModal: React.FC<CreateAlbumModalProps> = ({
   isLoading,
   onClose,
   onConfirmAction,
+  albumTitle,
+  setAlbumTitle,
 }) => {
   return (
     <Modal
@@ -27,9 +32,13 @@ const CreateAlbumModal: React.FC<CreateAlbumModalProps> = ({
         <span className="text-[1rem] md:text-[1.2rem] font-bold">
           Create album
         </span>
-        <TextInput label="Title" />
+        <TextInput
+          label="Title"
+          value={albumTitle}
+          onChange={(val) => setAlbumTitle(val.target.value)}
+        />
         <Button
-          className="w-full h-[3rem] flex items-center text-lg mt-4 disabled:opacity-70 text-[.9rem] md:text-[1rem] "
+          className="w-full h-[3rem] flex items-center text-lg mt-4 disabled:opacity-70 text-[.9rem] md:text-[1rem] hover:bg-primary "
           onClick={onConfirmAction}
           disabled={isLoading}
         >

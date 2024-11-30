@@ -1,26 +1,39 @@
-import { useQuery } from "@tanstack/react-query";
+import {
+  InvalidateQueryFilters,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MdAddCircleOutline } from "react-icons/md";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import DeleteModal from "../../components/DeleteModal";
 import ErrorFeedback from "../../components/ErrorFeedback";
 import Header from "../../components/Header";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import NoDataFeedback from "../../components/NoDataFeedback";
 import { Button } from "../../components/ui/button";
+import { useToast } from "../../hooks/use-toast";
 import { AlbumDTO } from "../../repositories/dtos/albumsDTO";
 import { UserDTO } from "../../repositories/dtos/usersDTO";
 import { AlbumsRepositoryImplementation } from "../../repositories/implementation/albumsRepository";
 import { UsersRepositoryImplementation } from "../../repositories/implementation/usersRepository";
 import { useAuthenticationStore } from "../../store/auth";
+import { useLoading } from "../../store/loading";
 import AlbumCard from "./AlbumCard";
 import CreateAlbumModal from "./CreateAlbumModal";
 
 const Albums: React.FC = () => {
   const [createAlbumModal, setCreateAlbumModal] = useState(false);
+  const [deleteAlbumModal, setDeleteAlbumModal] = useState(false);
   const [albums, setAlbums] = useState<AlbumDTO[]>([]);
+  const [selectedAlbum, setSelectedAlbum] = useState<AlbumDTO | null>(null);
   const [user, setUser] = useState<UserDTO | null>(null);
+  const [albumTitle, setAlbumTitle] = useState("");
+
+  const queryClient = useQueryClient();
 
   const [searchParams] = useSearchParams();
+  const { toast } = useToast();
 
   const userId = useMemo(
     () => Number(searchParams.get("userId")),
@@ -28,6 +41,7 @@ const Albums: React.FC = () => {
   );
 
   const { user: authenticatedUser } = useAuthenticationStore();
+  const { loading, setLoading } = useLoading();
 
   const albumsRepository = useMemo(() => {
     return new AlbumsRepositoryImplementation();
@@ -67,6 +81,9 @@ const Albums: React.FC = () => {
     queryFn: getAlbums,
   });
 
+  const isLoading = isUserLoading || isAlbumsLoading;
+  const error = userError || albumsError;
+
   useEffect(() => {
     getAlbums();
   }, [getAlbums]);
@@ -81,12 +98,81 @@ const Albums: React.FC = () => {
     navigate("/photos");
   };
 
-  const handleToggleCreateAlbumModal = () => {
+  const handleToggleCreateAlbumModal = useCallback(() => {
     setCreateAlbumModal(!createAlbumModal);
-  };
+  }, [createAlbumModal]);
 
-  const isLoading = isUserLoading || isAlbumsLoading;
-  const error = userError || albumsError;
+  const handleCreateAlbum = useCallback(async () => {
+    try {
+      setLoading(true);
+      await albumsRepository.createAlbum({ title: albumTitle, userId });
+      toast({
+        title: "Success",
+        description: "Album created successfully!",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          "There was an error at trying to create album. Please, try again later.",
+        variant: "destructive",
+      });
+      console.log(error);
+    } finally {
+      setLoading(false);
+      queryClient.invalidateQueries(["albums"] as InvalidateQueryFilters);
+      handleToggleCreateAlbumModal();
+      setAlbumTitle("");
+    }
+  }, [
+    albumTitle,
+    albumsRepository,
+    handleToggleCreateAlbumModal,
+    queryClient,
+    setLoading,
+    toast,
+    userId,
+  ]);
+
+  const handleToggleDeleteAlbumModal = useCallback(
+    (album: AlbumDTO | null) => {
+      setSelectedAlbum(album);
+      setDeleteAlbumModal(!deleteAlbumModal);
+    },
+    [deleteAlbumModal]
+  );
+
+  const handleDeleteAlbumConfirmation = useCallback(
+    async (albumId: number) => {
+      try {
+        setLoading(true);
+        await albumsRepository.deleteAlbum(albumId);
+        toast({
+          title: "Success",
+          description: "Album deleted successfully!",
+        });
+      } catch (error) {
+        toast({
+          title: "Error",
+          description:
+            "There was an error at trying to delete this album. Please, try again later.",
+          variant: "destructive",
+        });
+        console.log(error);
+      } finally {
+        setLoading(false);
+        queryClient.invalidateQueries(["albums"] as InvalidateQueryFilters);
+        handleToggleDeleteAlbumModal(null);
+      }
+    },
+    [
+      albumsRepository,
+      handleToggleDeleteAlbumModal,
+      queryClient,
+      setLoading,
+      toast,
+    ]
+  );
 
   return (
     <main className="w-full flex flex-col pt-[4rem] ">
@@ -138,6 +224,7 @@ const Albums: React.FC = () => {
                   title={album.title}
                   onSeeAlbum={handleSeeAlbumPhotos}
                   showControls={userId === authenticatedUser.id}
+                  onDelete={() => handleToggleDeleteAlbumModal(album)}
                 />
               ))
             ) : (
@@ -157,8 +244,16 @@ const Albums: React.FC = () => {
       <CreateAlbumModal
         isOpen={createAlbumModal}
         onClose={handleToggleCreateAlbumModal}
-        onConfirmAction={() => console.log("ok")}
-        isLoading={true}
+        onConfirmAction={() => handleCreateAlbum()}
+        albumTitle={albumTitle}
+        isLoading={loading}
+        setAlbumTitle={setAlbumTitle}
+      />
+      <DeleteModal
+        isOpen={deleteAlbumModal}
+        onClose={() => handleToggleDeleteAlbumModal(null)}
+        onConfirmAction={() => handleDeleteAlbumConfirmation(selectedAlbum!.id)}
+        resourceName="album"
       />
     </main>
   );
