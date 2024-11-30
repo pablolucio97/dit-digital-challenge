@@ -1,10 +1,14 @@
+import { useState } from "react";
 import { MdAddCircleOutline } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import { Button } from "../../components/ui/button";
 import AlbumCard from "./AlbumCard";
+import CreateAlbumModal from "./CreateAlbumModal";
 
 const Albums: React.FC = () => {
+  const [createAlbumModal, setCreateAlbumModal] = useState(false);
+
   const mockedAlbums = [
     {
       id: "1",
@@ -34,6 +38,10 @@ const Albums: React.FC = () => {
     navigate("/photos");
   };
 
+  const handleToggleCreateAlbumModal = () => {
+    setCreateAlbumModal(!createAlbumModal);
+  };
+
   return (
     <main className="w-full flex flex-col pt-[4rem]">
       <Header pageTitle="Albums" />
@@ -48,6 +56,7 @@ const Albums: React.FC = () => {
           <Button
             className="bg-secondary text-md font-bold text-sm md:text-md mt-3 md:mt-[0] hover:bg-secondary"
             size="lg"
+            onClick={handleToggleCreateAlbumModal}
           >
             <MdAddCircleOutline className="w-[2rem] h-[2rem]" />
             Create album
@@ -64,6 +73,12 @@ const Albums: React.FC = () => {
           ))}
         </div>
       </div>
+      <CreateAlbumModal
+        isOpen={createAlbumModal}
+        onClose={handleToggleCreateAlbumModal}
+        onConfirmAction={() => console.log("ok")}
+        isLoading={true}
+      />
     </main>
   );
 };
