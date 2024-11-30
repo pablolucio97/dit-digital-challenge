@@ -23,7 +23,7 @@ services:
     container_name: dti-digital-server-app
     image: node:20-alpine
     working_dir: /usr/src/app
-    command: ["npm", "run", "start:dev"]
+    command: ["sh", "-c", "npx prisma generate && npm run start:dev"]
     volumes:
       - ./:/usr/src/app
     ports:
