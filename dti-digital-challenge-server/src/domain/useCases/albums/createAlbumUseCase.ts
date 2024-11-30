@@ -7,7 +7,7 @@ export class CreateAlbumUseCase {
   constructor(private albumsService: AlbumsService) {}
   async execute(data: CreateAlbumDTO) {
     const { userId, title } = data;
-    const albumExists = await this.albumsService.checkAlbumExists(
+    const albumExists = await this.albumsService.checkAlbumTitleExistsForUser(
       userId,
       title,
     );

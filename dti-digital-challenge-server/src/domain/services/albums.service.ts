@@ -74,7 +74,7 @@ export class AlbumsService implements AlbumsRepository {
     return updatedAlbum;
   }
 
-  async checkAlbumExists(
+  async checkAlbumTitleExistsForUser(
     userId: number,
     title: string,
   ): Promise<AlbumDTO | null> {
@@ -82,6 +82,15 @@ export class AlbumsService implements AlbumsRepository {
       where: {
         userId,
         title,
+      },
+    });
+    return albumExists;
+  }
+
+  async checkAlbumExists(id: number): Promise<AlbumDTO | null> {
+    const albumExists = await this.prismaService.album.findUnique({
+      where: {
+        id,
       },
     });
     return albumExists;

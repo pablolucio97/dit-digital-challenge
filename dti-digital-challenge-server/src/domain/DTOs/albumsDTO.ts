@@ -16,5 +16,6 @@ export interface AlbumDTO {
 
 export interface UpdateAlbumDTO {
   id: number;
-  title?: string;
+  title: string;
+  userId: number;
 }
