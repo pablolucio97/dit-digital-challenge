@@ -1,4 +1,4 @@
-import { PhotoDTO } from './photoDTO';
+import { PhotoDTO } from './photosDTO';
 
 export interface CreateAlbumDTO {
   title: string;

@@ -1,23 +1,23 @@
 import {
   ConflictException,
   Controller,
-  Get,
+  Delete,
   HttpCode,
   Param,
 } from '@nestjs/common';
-import { ListAlbumsUseCase } from 'src/domain/useCases/albums/listAlbumsUseCase';
+import { DeletePhotoUseCase } from 'src/domain/useCases/photos/deletePhotoUseCase';
 
-@Controller('/albums/list-by-user')
-export class ListAlbumsController {
-  constructor(private listAlbumsUseCase: ListAlbumsUseCase) {}
-  @Get(':userId')
-  @HttpCode(200)
-  async handle(@Param('userId') userId: string) {
+@Controller('/photos/delete')
+export class DeletePhotoController {
+  constructor(private deletePhotoUseCase: DeletePhotoUseCase) {}
+  @Delete(':id')
+  @HttpCode(204)
+  async handle(@Param('id') id: string) {
     try {
-      const album = await this.listAlbumsUseCase.execute(parseInt(userId));
+      await this.deletePhotoUseCase.execute(parseInt(id));
       return {
         STATUS: 'Success',
-        RES: album,
+        RES: null,
       };
     } catch (error) {
       console.log('[INTERNAL ERROR]', error.message);

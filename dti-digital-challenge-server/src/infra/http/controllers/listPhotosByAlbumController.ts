@@ -5,19 +5,19 @@ import {
   HttpCode,
   Param,
 } from '@nestjs/common';
-import { ListAlbumsUseCase } from 'src/domain/useCases/albums/listAlbumsUseCase';
+import { ListPhotosByAlbumUseCase } from 'src/domain/useCases/photos/listPhotosByAlbumUseCase';
 
-@Controller('/albums/list-by-user')
-export class ListAlbumsController {
-  constructor(private listAlbumsUseCase: ListAlbumsUseCase) {}
-  @Get(':userId')
+@Controller('/photos/list-by-album')
+export class ListPhotosByAlbumController {
+  constructor(private listPhotosUseCase: ListPhotosByAlbumUseCase) {}
+  @Get(':albumId')
   @HttpCode(200)
-  async handle(@Param('userId') userId: string) {
+  async handle(@Param('albumId') albumId: string) {
     try {
-      const album = await this.listAlbumsUseCase.execute(parseInt(userId));
+      const photo = await this.listPhotosUseCase.execute(parseInt(albumId));
       return {
         STATUS: 'Success',
-        RES: album,
+        RES: photo,
       };
     } catch (error) {
       console.log('[INTERNAL ERROR]', error.message);
