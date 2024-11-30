@@ -6,11 +6,13 @@ import Header from "../../components/Header";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import { UserDTO } from "../../repositories/dtos/usersDTO";
 import { UsersRepositoryImplementation } from "../../repositories/implementation/usersRepository";
+import { useAuthenticationStore } from "../../store/auth";
 import UserCard from "./components/UserCard";
 
 const Users: React.FC = () => {
   const [users, setUsers] = useState<UserDTO[]>([]);
   const navigate = useNavigate();
+  const { isAuthenticated, signIn, signOut } = useAuthenticationStore();
 
   const usersRepository = useMemo(() => {
     return new UsersRepositoryImplementation();
@@ -39,6 +41,14 @@ const Users: React.FC = () => {
     navigate("/albums");
   };
 
+  const handleAuthenticate = (user: UserDTO) => {
+    signIn(user);
+  };
+
+  const handleSignOut = () => {
+    signOut();
+  };
+
   return (
     <main className="w-full flex flex-col pt-[4rem]">
       <Header pageTitle="Users" />
@@ -59,6 +69,9 @@ const Users: React.FC = () => {
                 key={user.id}
                 user={user}
                 onSeeAlbums={handleSeeAlbum}
+                isAuthenticated={isAuthenticated}
+                onAuthenticate={() => handleAuthenticate(user)}
+                onSignOut={handleSignOut}
               />
             ))}
           </div>
