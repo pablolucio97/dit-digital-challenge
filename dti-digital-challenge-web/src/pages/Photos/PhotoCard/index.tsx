@@ -34,15 +34,15 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
       <div className="flex flex-col w-full">
         <div className="w-full flex flex-col my-2">
           <div className="w-full flex">
-            <span className="mr-2 text-sm md:text-lg font-bold">Title: </span>
-            <span className="mr-2 text-sm md:text-lg">{title}</span>
+            <span className="mr-2 text-[.8rem] md:text-[1rem] font-bold">Title: </span>
+            <span className="mr-2 text-[.8rem] md:text-[1rem]">{title}</span>
           </div>
           {description && (
             <div className="w-full flex">
-              <span className="mr-2 text-sm md:text-lg font-bold">
+              <span className="mr-2 text-[.8rem] md:text-[1rem] font-bold">
                 Description:{" "}
               </span>
-              <span className="mr-2 text-sm md:text-lg">{description}</span>
+              <span className="mr-2 text-[.8rem] md:text-[1rem]">{description}</span>
             </div>
           )}
         </div>

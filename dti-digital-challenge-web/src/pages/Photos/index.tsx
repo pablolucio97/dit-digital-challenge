@@ -233,7 +233,7 @@ const Photos: React.FC = () => {
             disabled={userId !== authenticatedUser.id}
           >
             <MdAddCircleOutline className="w-[2rem] h-[2rem]" />
-            Create photo
+            Upload photo
           </Button>
         </div>
 

@@ -43,7 +43,7 @@ const HandlePhotoModal: React.FC<HandlePhotoModalProps> = ({
     >
       <div className="flex flex-col items-center">
         <span className="text-[1rem] md:text-[1.2rem] font-bold">
-          {mode === "create" ? "Create photo" : "Update photo"}
+          {mode === "create" ? "Upload photo" : "Update photo"}
         </span>
         <TextInput
           label="Title"
@@ -72,7 +72,7 @@ const HandlePhotoModal: React.FC<HandlePhotoModalProps> = ({
           {isLoading && (
             <MdOutlineMotionPhotosOn className="w-6 h-6 md:w-8 md:h-8 animate-spin " />
           )}
-          {mode === "create" ? "Create photo" : "Update photo"}
+          {mode === "create" ? "Upload photo" : "Update photo"}
         </Button>
       </div>
     </Modal>
