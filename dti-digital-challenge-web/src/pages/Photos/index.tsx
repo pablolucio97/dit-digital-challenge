@@ -280,7 +280,9 @@ const Photos: React.FC = () => {
                     : `Photos - ${user.name}`}
                 </h1>
                 <span className="mt-2 text-xs md:text-sm">
-                  {`Showing photos from ${user.name}´s ${photos[0].album.title} album`}
+                  {photos.length > 0 && photos[0].album
+                    ? `Showing photos from ${user.name}´s ${photos[0].album.title} album.`
+                    : "This album is empty."}
                 </span>
               </div>
             )}
