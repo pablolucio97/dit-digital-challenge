@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { MdOutlineMotionPhotosOn } from "react-icons/md";
 import Modal from "react-modal";
-import SelectInput from "../../../components/SelectInput";
+import SelectInput, { Option } from "../../../components/SelectInput";
 import TextInput from "../../../components/TextInput";
 import { Button } from "../../../components/ui/button";
 import { reactModalCustomStyles } from "../../../styles/react-modal";
@@ -16,9 +16,9 @@ interface HandlePhotoModalProps {
   photoDescription: string;
   setPhotoDescription: Dispatch<SetStateAction<string>>;
   mode: "create" | "update";
-  urlOptions: string[];
-  selectedUrlOption: string;
-  setSelectedUrlOption: Dispatch<SetStateAction<string>>;
+  urlOptions: Option[];
+  selectedUrlOption: Option;
+  setSelectedUrlOption: Dispatch<SetStateAction<Option>>;
 }
 
 const HandlePhotoModal: React.FC<HandlePhotoModalProps> = ({

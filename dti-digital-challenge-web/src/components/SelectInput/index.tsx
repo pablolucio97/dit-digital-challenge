@@ -7,10 +7,15 @@ import {
   SelectValue,
 } from "../ui/select";
 
+export interface Option {
+  label: string;
+  value: string;
+}
+
 interface SelectInputProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
-  options: string[];
-  setSelectedOption: Dispatch<SetStateAction<string>>;
+  options: Option[];
+  setSelectedOption: Dispatch<SetStateAction<Option>>;
 }
 
 const SelectInput: React.FC<SelectInputProps> = ({
@@ -22,14 +27,21 @@ const SelectInput: React.FC<SelectInputProps> = ({
     <div className="w-full flex flex-col">
       <div className="w-full md:min-w-[24rem]">
         <small className="text-[.6rem] md:text-[.8rem]">{label}</small>
-        <Select onValueChange={setSelectedOption}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Pick a photo" />
+        <Select
+          onValueChange={(value) => {
+            const selectedOption = options.find(
+              (option) => option.value === value
+            );
+            setSelectedOption(selectedOption!);
+          }}
+        >
+          <SelectTrigger className="w-full mt-2">
+            <SelectValue placeholder="Select an option" />
           </SelectTrigger>
           <SelectContent style={{ zIndex: 2000 }}>
             {options.map((option) => (
-              <SelectItem key={option} value={option}>
-                {option}
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
               </SelectItem>
             ))}
           </SelectContent>

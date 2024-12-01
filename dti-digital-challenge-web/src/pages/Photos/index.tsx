@@ -11,6 +11,7 @@ import ErrorFeedback from "../../components/ErrorFeedback";
 import Header from "../../components/Header";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import NoDataFeedback from "../../components/NoDataFeedback";
+import { Option } from "../../components/SelectInput";
 import { Button } from "../../components/ui/button";
 import { useToast } from "../../hooks/use-toast";
 import { PhotoDTO } from "../../repositories/dtos/photosDTO";
@@ -26,8 +27,11 @@ const Photos: React.FC = () => {
   const [createPhotoModal, setCreatePhotoModal] = useState(false);
   const [deletePhotoModal, setDeletePhotoModal] = useState(false);
   const [photos, setPhotos] = useState<PhotoDTO[]>([]);
-  const [publicPhotosURLs, setPublicPhotosURLs] = useState<string[]>([]);
-  const [selectedPublicURL, setSelectedPublicURL] = useState("");
+  const [publicPhotosURLs, setPublicPhotosURLs] = useState<Option[]>([]);
+  const [selectedPublicURL, setSelectedPublicURL] = useState<Option>({
+    value: "",
+    label: "",
+  });
   const [selectedPhoto, setSelectedPhoto] = useState<PhotoDTO | null>(null);
   const [user, setUser] = useState<UserDTO | null>(null);
   const [photoTitle, setPhotoTitle] = useState("");
@@ -68,7 +72,7 @@ const Photos: React.FC = () => {
       toast({
         title: "Error",
         description:
-          "There was an error at trying to create album. Please, try again later.",
+          "There was an error at trying to fetch photos. Please, try again later.",
         variant: "destructive",
       });
       console.log(error);
@@ -78,14 +82,17 @@ const Photos: React.FC = () => {
   const getPublicPhotosURLs = useCallback(async () => {
     try {
       const publicPhotos = await photosRepository.listPublicPhotos();
-      const urls = publicPhotos.map((photo) => photo.url);
+      const urls = publicPhotos.map((photo) => ({
+        label: photo.url,
+        value: photo.url,
+      }));
       setPublicPhotosURLs(urls);
       return publicPhotos;
     } catch (error) {
       toast({
         title: "Error",
         description:
-          "There was an error at trying to create album. Please, try again later.",
+          "There was an error at trying to fetch public photos. Please, try again later.",
         variant: "destructive",
       });
       console.log(error);
@@ -128,13 +135,15 @@ const Photos: React.FC = () => {
   const handleCreatePhoto = useCallback(async () => {
     try {
       setLoading(true);
-      await photosRepository.createPhoto({
-        title: photoTitle,
-        description: photoDescription,
-        albumId,
-        url: selectedPublicURL,
-        thumbnailUrl: selectedPublicURL.replace("600", "150"),
-      });
+      if (selectedPublicURL) {
+        await photosRepository.createPhoto({
+          title: photoTitle,
+          description: photoDescription,
+          albumId,
+          url: selectedPublicURL.label,
+          thumbnailUrl: selectedPublicURL.label.replace("600", "150"),
+        });
+      }
       toast({
         title: "Success",
         description: "Album created successfully!",
@@ -153,7 +162,7 @@ const Photos: React.FC = () => {
       handleToggleCreatePhotoModal();
       setPhotoTitle("");
       setPhotoDescription("");
-      setSelectedPublicURL("");
+      setSelectedPublicURL({ value: "", label: "" });
     }
   }, [
     albumId,

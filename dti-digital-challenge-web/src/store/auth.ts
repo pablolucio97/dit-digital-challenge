@@ -17,6 +17,8 @@ type Actions = {
   signOut: () => void;
 };
 
+const STORAGE_KEY = "auth-storage";
+
 export const useAuthenticationStore = create(
   persist<State & Actions>(
     (set) => ({
@@ -27,10 +29,11 @@ export const useAuthenticationStore = create(
       },
       signOut: () => {
         set({ isAuthenticated: false });
+        localStorage.removeItem(STORAGE_KEY);
       },
     }),
     {
-      name: "auth-storage",
+      name: STORAGE_KEY,
       storage: createJSONStorage(() => localStorage),
     }
   )

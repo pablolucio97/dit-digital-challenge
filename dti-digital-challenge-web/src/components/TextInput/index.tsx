@@ -12,7 +12,7 @@ const TextInput: React.FC<TextInputProps> = ({ label, ...rest }) => {
         <small className="text-[.6rem] md:text-[.8rem]">{label}</small>
         <Input
           type="text"
-          className="text-[.75rem] md:text-[.8rem] mt-1 h-[3rem] "
+          className="text-[.75rem] md:text-[.8rem] mt-2 h-[3rem]"
           {...rest}
         />
       </div>
