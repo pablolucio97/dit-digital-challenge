@@ -30,14 +30,14 @@ const AlbumCard: React.FC<AlbumCardProps> = ({
           <Button
             size="icon"
             onClick={onUpdate}
-            className="absolute top-2 right-[3.5rem] bg-secondary hover:bg-secondary text-white"
+            className="absolute top-2 right-[2.5rem] md:right-[3.5rem] bg-secondary hover:bg-secondary text-white w-7 h-7 md:w-10 md:h-10"
           >
             <MdEdit />
           </Button>
           <Button
             size="icon"
             onClick={onDelete}
-            className="absolute top-2 right-2 bg-secondary hover:bg-secondary text-red-400"
+            className="absolute top-2 right-2 bg-secondary hover:bg-secondary text-red-400 w-7 h-7 md:w-10 md:h-10"
           >
             <MdDelete />
           </Button>

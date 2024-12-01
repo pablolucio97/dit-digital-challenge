@@ -255,8 +255,8 @@ const Albums: React.FC = () => {
           <div
             className={
               albums.length > 0
-                ? "w-full items-center justify-center grid grid-cols-2  md:grid-cols-3 gap-4 mt-8"
-                : "w-full flex items-center justify-center mt-8"
+                ? "w-full items-center justify-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 max-h-[75vh] overflow-auto"
+                : "w-full flex items-center justify-center mt-8 max-h-[75vh] overflow-auto"
             }
           >
             {albums.length > 0 ? (

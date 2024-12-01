@@ -35,8 +35,8 @@ const SelectInput: React.FC<SelectInputProps> = ({
             setSelectedOption(selectedOption!);
           }}
         >
-          <SelectTrigger className="w-full mt-2">
-            <SelectValue placeholder="Select an option" />
+          <SelectTrigger className="w-full mt-2 text-[.75rem] md:text-[.9rem]">
+            <SelectValue placeholder="Select an option"/>
           </SelectTrigger>
           <SelectContent style={{ zIndex: 2000 }}>
             {options.map((option) => (

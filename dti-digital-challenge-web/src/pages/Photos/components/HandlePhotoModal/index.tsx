@@ -41,7 +41,7 @@ const HandlePhotoModal: React.FC<HandlePhotoModalProps> = ({
       onRequestClose={onClose}
       style={reactModalCustomStyles}
     >
-      <div className="flex flex-col items-center">
+      <div className="w-full flex flex-col items-center">
         <span className="text-[1rem] md:text-[1.2rem] font-bold">
           {mode === "create" ? "Upload photo" : "Update photo"}
         </span>

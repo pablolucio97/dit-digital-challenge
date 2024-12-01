@@ -9,6 +9,7 @@ const reactModalCustomStyles = {
     opacity: 1,
     borderRadius: 8,
     padding: 32,
+    minWidth: "20rem",
     maxWidth: "90vw",
     zIndex: 1000,
   },

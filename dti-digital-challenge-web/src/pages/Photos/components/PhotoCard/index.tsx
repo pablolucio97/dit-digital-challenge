@@ -25,21 +25,21 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
           <Button
             size="icon"
             onClick={onDelete}
-            className="absolute top-6 right-[1.5rem] bg-secondary hover:bg-secondary text-red-400"
+            className="absolute top-6 right-[1.5rem] bg-secondary hover:bg-secondary text-red-400 w-7 h-7 md:w-10 md:h-10"
           >
             <MdDelete />
           </Button>
           <Button
             size="icon"
             onClick={onUpdate}
-            className="absolute top-6 right-[4.5rem] bg-secondary hover:bg-secondary text-white"
+            className="absolute top-6 right-[3.5rem] md:right-[4.5rem] bg-secondary hover:bg-secondary text-white w-7 h-7 md:w-10 md:h-10"
           >
             <MdEdit />
           </Button>
         </>
       )}
       <img
-        className="w-[24rem] aspect-video rounded-md transition ease-in-out"
+        className="w-full aspect-video rounded-md transition ease-in-out"
         src={url}
       />
       <div className="flex flex-col w-full">

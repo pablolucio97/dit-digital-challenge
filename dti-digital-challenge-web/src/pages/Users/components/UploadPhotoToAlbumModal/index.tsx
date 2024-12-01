@@ -51,12 +51,12 @@ const UploadPhotoToAlbumModal: React.FC<UploadPhotoToAlbumModalProps> = ({
       onRequestClose={onClose}
       style={reactModalCustomStyles}
     >
-      <div className="flex flex-col items-center">
+      <div className="w-full flex flex-col items-center">
         <span className="text-[1rem] md:text-[1.2rem] font-bold">
           Upload photo
         </span>
 
-        <div className="my-3">
+        <div className="w-full flex flex-col my-3">
           {mode === "existing" ? (
             <SelectInput
               label="Pick an album"
@@ -80,7 +80,7 @@ const UploadPhotoToAlbumModal: React.FC<UploadPhotoToAlbumModalProps> = ({
           placeholder="Provide a title for your photo"
         />
 
-        <div className="my-3">
+        <div className="w-full my-3">
           <TextInput
             label="Description"
             value={photoDescription}
