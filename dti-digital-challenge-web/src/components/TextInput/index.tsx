@@ -11,9 +11,7 @@ const TextInput: React.FC<TextInputProps> = ({ label, ...rest }) => {
       <div className="w-full md:min-w-[24rem]">
         <small className="text-[.6rem] md:text-[.8rem]">{label}</small>
         <Input
-          id="task-name"
           type="text"
-          placeholder="Task name"
           className="text-[.75rem] md:text-[.8rem] mt-1 h-[3rem] "
           {...rest}
         />

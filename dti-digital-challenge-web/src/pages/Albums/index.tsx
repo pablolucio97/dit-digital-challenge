@@ -20,10 +20,11 @@ import { UsersRepositoryImplementation } from "../../repositories/implementation
 import { useAuthenticationStore } from "../../store/auth";
 import { useLoading } from "../../store/loading";
 import AlbumCard from "./AlbumCard";
-import CreateAlbumModal from "./CreateAlbumModal";
+import HandleAlbumModal from "./HandleAlbumModal";
 
 const Albums: React.FC = () => {
   const [createAlbumModal, setCreateAlbumModal] = useState(false);
+  const [updateAlbumModal, setUpdateAlbumModal] = useState(false);
   const [deleteAlbumModal, setDeleteAlbumModal] = useState(false);
   const [albums, setAlbums] = useState<AlbumDTO[]>([]);
   const [selectedAlbum, setSelectedAlbum] = useState<AlbumDTO | null>(null);
@@ -174,6 +175,53 @@ const Albums: React.FC = () => {
     ]
   );
 
+  const handleToggleUpdateAlbumModal = useCallback(
+    (album: AlbumDTO | null) => {
+      setSelectedAlbum(album);
+      setUpdateAlbumModal(!updateAlbumModal);
+    },
+    [updateAlbumModal]
+  );
+
+  const handleUpdateAlbumConfirmation = useCallback(async () => {
+    try {
+      setLoading(true);
+      if (selectedAlbum) {
+        await albumsRepository.updateAlbum({
+          userId,
+          id: selectedAlbum?.id,
+          title: albumTitle,
+        });
+      }
+      toast({
+        title: "Success",
+        description: "Album updated successfully!",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          "There was an error at trying to update this album. Please, try again later.",
+        variant: "destructive",
+      });
+      console.log(error);
+    } finally {
+      setLoading(false);
+      queryClient.invalidateQueries(["albums"] as InvalidateQueryFilters);
+      handleToggleUpdateAlbumModal(null);
+      setAlbumTitle("");
+    }
+  }, [
+    albumTitle,
+    albumsRepository,
+    handleToggleUpdateAlbumModal,
+    queryClient,
+    selectedAlbum,
+    setLoading,
+    toast,
+    userId,
+  ]);
+
   return (
     <main className="w-full flex flex-col pt-[4rem] ">
       <Header pageTitle="Albums" />
@@ -225,6 +273,7 @@ const Albums: React.FC = () => {
                   onSeeAlbum={handleSeeAlbumPhotos}
                   showControls={userId === authenticatedUser.id}
                   onDelete={() => handleToggleDeleteAlbumModal(album)}
+                  onUpdate={() => handleToggleUpdateAlbumModal(album)}
                 />
               ))
             ) : (
@@ -241,13 +290,23 @@ const Albums: React.FC = () => {
           </div>
         )}
       </div>
-      <CreateAlbumModal
+      <HandleAlbumModal
         isOpen={createAlbumModal}
         onClose={handleToggleCreateAlbumModal}
         onConfirmAction={() => handleCreateAlbum()}
         albumTitle={albumTitle}
         isLoading={loading}
         setAlbumTitle={setAlbumTitle}
+        mode="create"
+      />
+      <HandleAlbumModal
+        isOpen={updateAlbumModal}
+        onClose={() => handleToggleUpdateAlbumModal(null)}
+        onConfirmAction={() => handleUpdateAlbumConfirmation()}
+        albumTitle={albumTitle}
+        isLoading={loading}
+        setAlbumTitle={setAlbumTitle}
+        mode="update"
       />
       <DeleteModal
         isOpen={deleteAlbumModal}
