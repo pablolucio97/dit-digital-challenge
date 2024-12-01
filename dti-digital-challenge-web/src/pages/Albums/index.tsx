@@ -19,8 +19,8 @@ import { AlbumsRepositoryImplementation } from "../../repositories/implementatio
 import { UsersRepositoryImplementation } from "../../repositories/implementation/usersRepository";
 import { useAuthenticationStore } from "../../store/auth";
 import { useLoading } from "../../store/loading";
-import AlbumCard from "./AlbumCard";
-import HandleAlbumModal from "./HandleAlbumModal";
+import AlbumCard from "./components/AlbumCard";
+import HandleAlbumModal from "./components/HandleAlbumModal";
 
 const Albums: React.FC = () => {
   const [createAlbumModal, setCreateAlbumModal] = useState(false);

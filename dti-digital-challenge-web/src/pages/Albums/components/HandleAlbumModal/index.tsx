@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction } from "react";
 import { MdOutlineMotionPhotosOn } from "react-icons/md";
 import Modal from "react-modal";
-import TextInput from "../../../components/TextInput";
-import { Button } from "../../../components/ui/button";
-import { reactModalCustomStyles } from "../../../styles/react-modal";
+import TextInput from "../../../../components/TextInput";
+import { Button } from "../../../../components/ui/button";
+import { reactModalCustomStyles } from "../../../../styles/react-modal";
 
 interface HandleAlbumModalProps {
   isOpen: boolean;

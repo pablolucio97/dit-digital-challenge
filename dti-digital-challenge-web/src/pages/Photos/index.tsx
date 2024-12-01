@@ -20,8 +20,8 @@ import { PhotosRepositoryImplementation } from "../../repositories/implementatio
 import { UsersRepositoryImplementation } from "../../repositories/implementation/usersRepository";
 import { useAuthenticationStore } from "../../store/auth";
 import { useLoading } from "../../store/loading";
-import HandlePhotoModal from "./HandlePhotoModal";
-import PhotoCard from "./PhotoCard";
+import HandlePhotoModal from "./components/HandlePhotoModal";
+import PhotoCard from "./components/PhotoCard";
 
 const Photos: React.FC = () => {
   const [createPhotoModal, setCreatePhotoModal] = useState(false);

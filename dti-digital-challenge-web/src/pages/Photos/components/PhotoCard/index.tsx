@@ -1,5 +1,5 @@
 import { MdDelete, MdEdit } from "react-icons/md";
-import { Button } from "../../../components/ui/button";
+import { Button } from "../../../../components/ui/button";
 
 interface PhotoCardProps {
   url: string;

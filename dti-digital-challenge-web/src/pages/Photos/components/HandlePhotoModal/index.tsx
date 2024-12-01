@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
 import { MdOutlineMotionPhotosOn } from "react-icons/md";
 import Modal from "react-modal";
-import SelectInput, { Option } from "../../../components/SelectInput";
-import TextInput from "../../../components/TextInput";
-import { Button } from "../../../components/ui/button";
-import { reactModalCustomStyles } from "../../../styles/react-modal";
+import SelectInput, { Option } from "../../../../components/SelectInput";
+import TextInput from "../../../../components/TextInput";
+import { Button } from "../../../../components/ui/button";
+import { reactModalCustomStyles } from "../../../../styles/react-modal";
 
 interface HandlePhotoModalProps {
   isOpen: boolean;
