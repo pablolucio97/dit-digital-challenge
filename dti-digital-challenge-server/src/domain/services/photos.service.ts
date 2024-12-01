@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import axios from 'axios';
 import { PrismaService } from 'src/infra/services/PrismaService';
 import { CreatePhotoDTO, PhotoDTO } from '../DTOs/photosDTO';
 import { PhotosRepository } from '../repositories/interfaces/photosRepository';
@@ -29,6 +30,14 @@ export class PhotosService implements PhotosRepository {
     const photos = await this.prismaService.photo.findMany({
       where: {
         albumId,
+      },
+      include: {
+        album: {
+          select: {
+            title: true,
+            userId: true,
+          },
+        },
       },
     });
     return photos;
@@ -64,5 +73,20 @@ export class PhotosService implements PhotosRepository {
     }
 
     return photo;
+  }
+
+  async listPublicPhotos(): Promise<PhotoDTO[]> {
+    try {
+      const { data } = await axios.get<PhotoDTO[]>(
+        'https://jsonplaceholder.typicode.com/photos',
+      );
+      if (data) {
+        return data.slice(0, 20);
+      }
+      return [];
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      return [];
+    }
   }
 }

@@ -3,7 +3,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { MdAddCircleOutline } from "react-icons/md";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import DeleteModal from "../../components/DeleteModal";
@@ -85,18 +85,10 @@ const Albums: React.FC = () => {
   const isLoading = isUserLoading || isAlbumsLoading;
   const error = userError || albumsError;
 
-  useEffect(() => {
-    getAlbums();
-  }, [getAlbums]);
-
-  useEffect(() => {
-    getUser();
-  }, [getUser]);
-
   const navigate = useNavigate();
 
-  const handleSeeAlbumPhotos = () => {
-    navigate("/photos");
+  const handleSeeAlbumPhotos = (albumId: number) => {
+    navigate(`/photos?userId=${userId}&albumId=${albumId}`);
   };
 
   const handleToggleCreateAlbumModal = useCallback(() => {
@@ -231,7 +223,9 @@ const Albums: React.FC = () => {
             {user && (
               <div>
                 <h1 className="text-lg md:text-2xl font-bold">
-                  Albums - {user.name}
+                  {user.id === authenticatedUser.id
+                    ? "My albums"
+                    : `Albums - ${user.name}`}
                 </h1>
                 <span className="mt-2 text-xs md:text-sm">
                   {`Showing ${user.name}'s albums - ${user.email}`}
@@ -270,7 +264,7 @@ const Albums: React.FC = () => {
                 <AlbumCard
                   key={album.id}
                   title={album.title}
-                  onSeeAlbum={handleSeeAlbumPhotos}
+                  onSeeAlbum={() => handleSeeAlbumPhotos(album.id)}
                   showControls={userId === authenticatedUser.id}
                   onDelete={() => handleToggleDeleteAlbumModal(album)}
                   onUpdate={() => handleToggleUpdateAlbumModal(album)}
