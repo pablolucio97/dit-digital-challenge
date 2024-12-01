@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { PrismaService } from 'src/infra/services/PrismaService';
-import { CreatePhotoDTO, PhotoDTO } from '../DTOs/photosDTO';
+import { CreatePhotoDTO, PhotoDTO, UpdatePhotoDTO } from '../DTOs/photosDTO';
 import { PhotosRepository } from '../repositories/interfaces/photosRepository';
 
 @Injectable()
@@ -76,17 +76,55 @@ export class PhotosService implements PhotosRepository {
   }
 
   async listPublicPhotos(): Promise<PhotoDTO[]> {
+    const MAX_PHOTOS_TO_FETCH = 20;
+
     try {
       const { data } = await axios.get<PhotoDTO[]>(
         'https://jsonplaceholder.typicode.com/photos',
       );
       if (data) {
-        return data.slice(0, 20);
+        return data.slice(0, MAX_PHOTOS_TO_FETCH);
       }
       return [];
     } catch (error) {
       console.error('Error fetching users:', error);
       return [];
     }
+  }
+
+  async updatePhoto(data: UpdatePhotoDTO): Promise<PhotoDTO | null> {
+    const { id } = data;
+
+    const photo = await this.prismaService.photo.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!photo) {
+      return null;
+    }
+
+    const updatedPhoto = await this.prismaService.photo.update({
+      where: {
+        id,
+      },
+      data,
+    });
+
+    return updatedPhoto;
+  }
+
+  async checkPhotoTitleExistsForAlbum(
+    albumId: number,
+    title: string,
+  ): Promise<PhotoDTO | null> {
+    const photoExists = await this.prismaService.photo.findFirst({
+      where: {
+        albumId,
+        title,
+      },
+    });
+    return photoExists;
   }
 }
