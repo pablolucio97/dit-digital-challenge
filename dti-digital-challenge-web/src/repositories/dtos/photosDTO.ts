@@ -19,3 +19,10 @@ export interface PhotoDTO {
   updatedAt: Date;
   album: AlbumDTO
 }
+
+export interface UpdatePhotoDTO {
+  id: number;
+  title?: string;
+  description?: string;
+  albumId: number;
+}

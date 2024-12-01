@@ -1,5 +1,5 @@
 import { IApiSuccessResponse, api } from "../../services/api";
-import { CreatePhotoDTO, PhotoDTO } from "../dtos/photosDTO";
+import { CreatePhotoDTO, PhotoDTO, UpdatePhotoDTO } from "../dtos/photosDTO";
 import { PhotosRepository } from "../interfaces/photosRepository";
 
 export class PhotosRepositoryImplementation implements PhotosRepository {
@@ -27,5 +27,13 @@ export class PhotosRepositoryImplementation implements PhotosRepository {
 
   async deletePhoto(photoId: number): Promise<void> {
     await api.delete(`/photos/delete/${photoId}`);
+  }
+
+  async updatePhoto(data: UpdatePhotoDTO): Promise<PhotoDTO> {
+    const response = await api.put<IApiSuccessResponse<PhotoDTO>>(
+      "/photos/update",
+      data
+    );
+    return response.data.RES;
   }
 }

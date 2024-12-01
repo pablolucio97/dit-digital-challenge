@@ -58,11 +58,13 @@ const HandlePhotoModal: React.FC<HandlePhotoModalProps> = ({
           placeholder="Provide a title for your photo (not mandatory)"
         />
 
-        <SelectInput
-          label="Pick an option"
-          options={urlOptions}
-          setSelectedOption={setSelectedUrlOption}
-        />
+        {mode === "create" && (
+          <SelectInput
+            label="Pick an option"
+            options={urlOptions}
+            setSelectedOption={setSelectedUrlOption}
+          />
+        )}
 
         <Button
           className="w-full h-[3rem] flex items-center text-lg mt-4 disabled:opacity-70 text-[.9rem] md:text-[1rem] hover:bg-primary "

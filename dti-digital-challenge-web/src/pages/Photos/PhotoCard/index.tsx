@@ -1,4 +1,4 @@
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdEdit } from "react-icons/md";
 import { Button } from "../../../components/ui/button";
 
 interface PhotoCardProps {
@@ -7,6 +7,7 @@ interface PhotoCardProps {
   description: string;
   showControls: boolean;
   onDelete?: () => void;
+  onUpdate?: () => void;
 }
 
 const PhotoCard: React.FC<PhotoCardProps> = ({
@@ -15,17 +16,27 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
   description,
   showControls,
   onDelete,
+  onUpdate,
 }) => {
   return (
     <div className="flex flex-col bg-white shadow-md rounded-md relative p-4">
       {showControls && (
-        <Button
-          size="icon"
-          onClick={onDelete}
-          className="absolute top-6 right-6 bg-secondary hover:bg-secondary text-red-400"
-        >
-          <MdDelete />
-        </Button>
+        <>
+          <Button
+            size="icon"
+            onClick={onDelete}
+            className="absolute top-6 right-[1.5rem] bg-secondary hover:bg-secondary text-red-400"
+          >
+            <MdDelete />
+          </Button>
+          <Button
+            size="icon"
+            onClick={onUpdate}
+            className="absolute top-6 right-[4.5rem] bg-secondary hover:bg-secondary text-white"
+          >
+            <MdEdit />
+          </Button>
+        </>
       )}
       <img
         className="w-[24rem] aspect-video rounded-md transition ease-in-out"
@@ -34,7 +45,9 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
       <div className="flex flex-col w-full">
         <div className="w-full flex flex-col my-2">
           <div className="w-full flex">
-            <span className="mr-2 text-[.8rem] md:text-[1rem] font-bold">Title: </span>
+            <span className="mr-2 text-[.8rem] md:text-[1rem] font-bold">
+              Title:{" "}
+            </span>
             <span className="mr-2 text-[.8rem] md:text-[1rem]">{title}</span>
           </div>
           {description && (
@@ -42,7 +55,9 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
               <span className="mr-2 text-[.8rem] md:text-[1rem] font-bold">
                 Description:{" "}
               </span>
-              <span className="mr-2 text-[.8rem] md:text-[1rem]">{description}</span>
+              <span className="mr-2 text-[.8rem] md:text-[1rem]">
+                {description}
+              </span>
             </div>
           )}
         </div>

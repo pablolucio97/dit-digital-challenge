@@ -25,6 +25,7 @@ import PhotoCard from "./PhotoCard";
 
 const Photos: React.FC = () => {
   const [createPhotoModal, setCreatePhotoModal] = useState(false);
+  const [updatePhotoModal, setUpdatePhotoModal] = useState(false);
   const [deletePhotoModal, setDeletePhotoModal] = useState(false);
   const [photos, setPhotos] = useState<PhotoDTO[]>([]);
   const [publicPhotosURLs, setPublicPhotosURLs] = useState<Option[]>([]);
@@ -177,8 +178,8 @@ const Photos: React.FC = () => {
   ]);
 
   const handleToggleDeletePhotoModal = useCallback(
-    (album: PhotoDTO | null) => {
-      setSelectedPhoto(album);
+    (photo: PhotoDTO | null) => {
+      setSelectedPhoto(photo);
       setDeletePhotoModal(!deletePhotoModal);
     },
     [deletePhotoModal]
@@ -215,6 +216,55 @@ const Photos: React.FC = () => {
       handleToggleDeletePhotoModal,
     ]
   );
+
+  const handleToggleUpdatePhotoModal = useCallback(
+    (photo: PhotoDTO | null) => {
+      setSelectedPhoto(photo);
+      setUpdatePhotoModal(!updatePhotoModal);
+    },
+    [updatePhotoModal]
+  );
+
+  const handleUpdatePhoto = useCallback(async () => {
+    try {
+      if (selectedPhoto) {
+        setLoading(true);
+        await photosRepository.updatePhoto({
+          id: selectedPhoto.id,
+          albumId: selectedPhoto.albumId!,
+          description: photoDescription,
+          title: photoTitle,
+        });
+      }
+      toast({
+        title: "Success",
+        description: "Photo updated successfully!",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          "There was an error at trying to update this photo. Please, try again later.",
+        variant: "destructive",
+      });
+      console.log(error);
+    } finally {
+      setLoading(false);
+      setPhotoDescription("");
+      setPhotoTitle("");
+      handleToggleUpdatePhotoModal(null);
+      queryClient.invalidateQueries(["photos"] as InvalidateQueryFilters);
+    }
+  }, [
+    handleToggleUpdatePhotoModal,
+    photoDescription,
+    photoTitle,
+    photosRepository,
+    queryClient,
+    selectedPhoto,
+    setLoading,
+    toast,
+  ]);
 
   return (
     <main className="w-full flex flex-col pt-[4rem]">
@@ -264,6 +314,7 @@ const Photos: React.FC = () => {
                 description={photo.description ?? ""}
                 showControls={authenticatedUser.id === userId}
                 onDelete={() => handleToggleDeletePhotoModal(photo)}
+                onUpdate={() => handleToggleUpdatePhotoModal(photo)}
               />
             ))}
           </div>
@@ -292,6 +343,20 @@ const Photos: React.FC = () => {
         selectedUrlOption={selectedPublicURL}
         setSelectedUrlOption={setSelectedPublicURL}
         mode="create"
+      />
+      <HandlePhotoModal
+        isOpen={updatePhotoModal}
+        onClose={() => handleToggleUpdatePhotoModal(null)}
+        onConfirmAction={handleUpdatePhoto}
+        photoTitle={photoTitle}
+        setPhotoTitle={setPhotoTitle}
+        photoDescription={photoDescription}
+        setPhotoDescription={setPhotoDescription}
+        isLoading={loading}
+        urlOptions={publicPhotosURLs}
+        selectedUrlOption={selectedPublicURL}
+        setSelectedUrlOption={setSelectedPublicURL}
+        mode="update"
       />
       <DeleteModal
         isOpen={deletePhotoModal}
