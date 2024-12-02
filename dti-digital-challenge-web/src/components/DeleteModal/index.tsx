@@ -21,7 +21,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
       onRequestClose={onClose}
       style={reactModalCustomStyles}
     >
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center" data-testid="delete-modal">
         <span className="text-[1rem] md:text-[1.2rem] font-bold mb-3">
           Delete {resourceName}
         </span>
@@ -33,6 +33,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
           <Button
             className="w-[8rem] h-[3rem] flex bg-red-500 hover:bg-red-500 items-center text-lg mt-4 disabled:opacity-70 text-[.9rem] md:text-[1rem] mr-8"
             onClick={onConfirmAction}
+            data-testid="modal-delete-confirm-button"
           >
             Confirm
           </Button>
@@ -40,6 +41,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
             className="w-[8rem] h-[3rem] flex  items-center text-lg mt-4 disabled:opacity-70 text-[.9rem] md:text-[1rem] "
             onClick={onClose}
             variant="outline"
+            data-testid="modal-delete-cancel-button"
           >
             Cancel
           </Button>

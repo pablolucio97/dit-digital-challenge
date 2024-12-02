@@ -14,14 +14,24 @@ const Header: React.FC<HeaderProps> = ({ pageTitle }) => {
   };
 
   return (
-    <header className="w-full h-[4rem] flex items-center bg-gradient-to-r from-[#111111] to-[#3f3f3f] p-4 fixed top-0 left-0">
+    <header
+      className="w-full h-[4rem] flex items-center bg-gradient-to-r from-[#111111] to-[#3f3f3f] p-4 fixed top-0 left-0"
+      data-testid="header-component"
+    >
       <div className="w-[1080px] flex items-center mx-auto">
         {location.pathname !== "/" && (
-          <button onClick={goBack} className="text-white mx-2">
+          <button
+            onClick={goBack}
+            className="text-white mx-2"
+            data-testid="header-component-go-back-button"
+          >
             <MdArrowBack className="w-5 h-5 md:w-8 md:h-8" />
           </button>
         )}
-        <span className="text-lg md:text-xl text-white font-bold">
+        <span
+          className="text-lg md:text-xl text-white font-bold"
+          data-testid="header-page-title"
+        >
           {pageTitle}
         </span>
       </div>
