@@ -104,13 +104,26 @@ const Albums: React.FC = () => {
         description: "Album created successfully!",
       });
     } catch (error) {
-      toast({
-        title: "Error",
-        description:
-          "There was an error at trying to create album. Please, try again later.",
-        variant: "destructive",
-      });
-      console.log(error);
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "statusCode" in error &&
+        error.statusCode === 409
+      ) {
+        toast({
+          title: "Error",
+          description:
+            "There is an album with this title already. Please provide another title.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description:
+            "There was an error trying to create the album. Please try again later.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
       queryClient.invalidateQueries(["albums"] as InvalidateQueryFilters);
@@ -190,13 +203,26 @@ const Albums: React.FC = () => {
         description: "Album updated successfully!",
       });
     } catch (error) {
-      toast({
-        title: "Error",
-        description:
-          "There was an error at trying to update this album. Please, try again later.",
-        variant: "destructive",
-      });
-      console.log(error);
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "statusCode" in error &&
+        error.statusCode === 409
+      ) {
+        toast({
+          title: "Error",
+          description:
+            "There is an album with this title already. Please provide another title.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description:
+            "There was an error trying to update the album. Please try again later.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
       queryClient.invalidateQueries(["albums"] as InvalidateQueryFilters);

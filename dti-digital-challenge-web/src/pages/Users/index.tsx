@@ -178,13 +178,26 @@ const Users: React.FC = () => {
         description: "Photo uploaded successfully!",
       });
     } catch (error) {
-      toast({
-        title: "Error",
-        description:
-          "There was an error at trying to upload photo. Please, try again later.",
-        variant: "destructive",
-      });
-      console.log(error);
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "statusCode" in error &&
+        error.statusCode === 409
+      ) {
+        toast({
+          title: "Error",
+          description:
+            "There is a photo with this title already for this album. Please provide another title.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description:
+            "There was an error trying to upload photo. Please try again later.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
       setUploadPhotoIntoExistingAlbumModal(false);

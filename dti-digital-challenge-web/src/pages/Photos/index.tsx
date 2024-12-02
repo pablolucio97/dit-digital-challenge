@@ -147,16 +147,29 @@ const Photos: React.FC = () => {
       }
       toast({
         title: "Success",
-        description: "Album created successfully!",
+        description: "Photo uploaded successfully!",
       });
     } catch (error) {
-      toast({
-        title: "Error",
-        description:
-          "There was an error at trying to create album. Please, try again later.",
-        variant: "destructive",
-      });
-      console.log(error);
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "statusCode" in error &&
+        error.statusCode === 409
+      ) {
+        toast({
+          title: "Error",
+          description:
+            "There is a photo with this title already for this album. Please provide another title.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description:
+            "There was an error trying to upload photo. Please try again later.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
       queryClient.invalidateQueries(["photos"] as InvalidateQueryFilters);
@@ -241,13 +254,26 @@ const Photos: React.FC = () => {
         description: "Photo updated successfully!",
       });
     } catch (error) {
-      toast({
-        title: "Error",
-        description:
-          "There was an error at trying to update this photo. Please, try again later.",
-        variant: "destructive",
-      });
-      console.log(error);
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "statusCode" in error &&
+        error.statusCode === 409
+      ) {
+        toast({
+          title: "Error",
+          description:
+            "There is a photo with this title already for this album. Please provide another title.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description:
+            "There was an error trying to upload photo. Please try again later.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
       setPhotoDescription("");
