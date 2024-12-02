@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { PrismaService } from 'src/infra/services/PrismaService';
+import { PrismaService } from '../../infra/services/PrismaService';
 import { CreatePhotoDTO, PhotoDTO, UpdatePhotoDTO } from '../DTOs/photosDTO';
 import { PhotosRepository } from '../repositories/interfaces/photosRepository';
 

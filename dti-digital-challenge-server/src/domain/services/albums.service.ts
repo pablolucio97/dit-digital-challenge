@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/infra/services/PrismaService';
+import { PrismaService } from '../../infra/services/PrismaService';
 import { AlbumDTO, CreateAlbumDTO, UpdateAlbumDTO } from '../DTOs/albumsDTO';
 import { AlbumsRepository } from '../repositories/interfaces/albumsRepository';
 
