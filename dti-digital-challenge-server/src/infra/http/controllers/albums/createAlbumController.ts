@@ -3,6 +3,8 @@ import {
   ConflictException,
   Controller,
   HttpCode,
+  HttpStatus,
+  InternalServerErrorException,
   Post,
 } from '@nestjs/common';
 import { CreateAlbumDTO } from 'src/domain/DTOs/albumsDTO';
@@ -26,22 +28,31 @@ export class CreateAlbumController {
       throw new ConflictException({
         message: 'The body format is invalid. Check the fields below:',
         error: isBodyValid.error.issues,
+        status: HttpStatus.BAD_REQUEST,
       });
     }
 
     try {
       const newAlbum = await this.createAlbumUseCase.execute(body);
       return {
-        STATUS: 'Success',
+        STATUS: HttpStatus.CREATED,
         RES: newAlbum,
       };
     } catch (error) {
       console.log('[INTERNAL ERROR]', error.message);
-      throw new ConflictException({
-        message:
-          'An error occurred. Check all request body fields for possible mismatching.',
-        error: error.message,
-      });
+      if (error.status && error.status === HttpStatus.CONFLICT) {
+        throw new ConflictException({
+          statusCode: HttpStatus.CONFLICT,
+          message: error.message,
+          error: error.detail,
+        });
+      } else {
+        throw new InternalServerErrorException({
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+          message: 'An unexpected error occurred. Please try again.',
+          error: error.message,
+        });
+      }
     }
   }
 }

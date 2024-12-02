@@ -1,8 +1,9 @@
 import {
-  ConflictException,
   Controller,
   Get,
   HttpCode,
+  HttpStatus,
+  InternalServerErrorException,
   Param,
 } from '@nestjs/common';
 import { ListAlbumsUseCase } from 'src/domain/useCases/albums/listAlbumsUseCase';
@@ -16,15 +17,16 @@ export class ListAlbumsController {
     try {
       const albums = await this.listAlbumsUseCase.execute(parseInt(userId));
       return {
-        STATUS: 'Success',
+        STATUS: HttpStatus.OK,
         RES: albums,
       };
     } catch (error) {
       console.log('[INTERNAL ERROR]', error.message);
-      throw new ConflictException({
+      throw new InternalServerErrorException({
         message:
           'An error occurred. Check all request body fields for possible mismatching.',
         error: error.message,
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
       });
     }
   }

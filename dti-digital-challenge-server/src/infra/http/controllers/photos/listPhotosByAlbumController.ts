@@ -1,8 +1,10 @@
 import {
-  ConflictException,
   Controller,
   Get,
   HttpCode,
+  HttpStatus,
+  InternalServerErrorException,
+  NotFoundException,
   Param,
 } from '@nestjs/common';
 import { ListPhotosByAlbumUseCase } from 'src/domain/useCases/photos/listPhotosByAlbumUseCase';
@@ -16,16 +18,24 @@ export class ListPhotosByAlbumController {
     try {
       const photos = await this.listPhotosUseCase.execute(parseInt(albumId));
       return {
-        STATUS: 'Success',
+        STATUS: HttpStatus.OK,
         RES: photos,
       };
     } catch (error) {
       console.log('[INTERNAL ERROR]', error.message);
-      throw new ConflictException({
-        message:
-          'An error occurred. Check all request body fields for possible mismatching.',
-        error: error.message,
-      });
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException({
+          statusCode: HttpStatus.NOT_FOUND,
+          message: error.message,
+        });
+      } else {
+        throw new InternalServerErrorException({
+          message:
+            'An error occurred. Check all request body fields for possible mismatching.',
+          error: error.message,
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+        });
+      }
     }
   }
 }

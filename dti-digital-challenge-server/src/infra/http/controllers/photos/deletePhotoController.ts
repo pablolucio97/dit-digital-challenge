@@ -1,8 +1,10 @@
 import {
-  ConflictException,
   Controller,
   Delete,
   HttpCode,
+  HttpStatus,
+  InternalServerErrorException,
+  NotFoundException,
   Param,
 } from '@nestjs/common';
 import { DeletePhotoUseCase } from 'src/domain/useCases/photos/deletePhotoUseCase';
@@ -16,16 +18,24 @@ export class DeletePhotoController {
     try {
       await this.deletePhotoUseCase.execute(parseInt(id));
       return {
-        STATUS: 'Success',
+        STATUS: HttpStatus.OK,
         RES: null,
       };
     } catch (error) {
       console.log('[INTERNAL ERROR]', error.message);
-      throw new ConflictException({
-        message:
-          'An error occurred. Check all request body fields for possible mismatching.',
-        error: error.message,
-      });
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException({
+          statusCode: HttpStatus.NOT_FOUND,
+          message: error.message,
+        });
+      } else {
+        throw new InternalServerErrorException({
+          message:
+            'An error occurred. Check all request body fields for possible mismatching.',
+          error: error.message,
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+        });
+      }
     }
   }
 }

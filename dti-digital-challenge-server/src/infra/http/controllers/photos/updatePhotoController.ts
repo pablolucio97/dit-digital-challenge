@@ -3,6 +3,9 @@ import {
   ConflictException,
   Controller,
   HttpCode,
+  HttpStatus,
+  InternalServerErrorException,
+  NotFoundException,
   Put,
 } from '@nestjs/common';
 import { UpdatePhotoDTO } from 'src/domain/DTOs/photosDTO';
@@ -39,11 +42,23 @@ export class UpdatePhotoController {
       };
     } catch (error) {
       console.log('[INTERNAL ERROR]', error.message);
-      throw new ConflictException({
-        message:
-          'An error occurred. Check all request body fields for possible mismatching.',
-        error: error.message,
-      });
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException({
+          statusCode: HttpStatus.NOT_FOUND,
+          message: error.message,
+        });
+      } else if (error instanceof ConflictException) {
+        throw new ConflictException({
+          statusCode: HttpStatus.CONFLICT,
+          message: error.message,
+        });
+      } else {
+        throw new InternalServerErrorException({
+          statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+          message: 'An unexpected error occurred. Please try again.',
+          error: error.message,
+        });
+      }
     }
   }
 }
