@@ -5,6 +5,14 @@ import { UsersService } from '../../services/user.service';
 const apiListUsersURL = 'https://jsonplaceholder.typicode.com/users';
 
 describe('listUsers', () => {
+  beforeEach(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   it('should return a list of users when the request is successful', async () => {
     const mock = new MockAdapter(axios);
     const expectedUsers = [
