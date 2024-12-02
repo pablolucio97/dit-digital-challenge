@@ -60,12 +60,14 @@ const UploadPhotoToAlbumModal: React.FC<UploadPhotoToAlbumModalProps> = ({
           {mode === "existing" ? (
             <SelectInput
               label="Pick an album"
+              aria-label="Pick an album"
               options={albumOptions}
               setSelectedOption={setSelectedAlbumOption}
             />
           ) : (
             <TextInput
               label="Album title"
+              aria-label="Provide album title"
               value={albumTitle}
               onChange={(val) => setAlbumTitle(val.target.value)}
               placeholder="Provide a title for your album"
@@ -75,6 +77,7 @@ const UploadPhotoToAlbumModal: React.FC<UploadPhotoToAlbumModalProps> = ({
 
         <TextInput
           label="Photo title"
+          aria-label="Provide photo title"
           value={photoTitle}
           onChange={(val) => setPhotoTitle(val.target.value)}
           placeholder="Provide a title for your photo"
@@ -83,6 +86,7 @@ const UploadPhotoToAlbumModal: React.FC<UploadPhotoToAlbumModalProps> = ({
         <div className="w-full my-3">
           <TextInput
             label="Description"
+            aria-label="Provide photo description"
             value={photoDescription}
             onChange={(val) => setPhotoDescription(val.target.value)}
             placeholder="Provide a title for your photo (not mandatory)"
@@ -91,6 +95,7 @@ const UploadPhotoToAlbumModal: React.FC<UploadPhotoToAlbumModalProps> = ({
 
         <SelectInput
           label="Pick a picture"
+          aria-label="Pick a picture"
           options={urlOptions}
           setSelectedOption={setSelectedPublicPhotoUrlOption}
         />

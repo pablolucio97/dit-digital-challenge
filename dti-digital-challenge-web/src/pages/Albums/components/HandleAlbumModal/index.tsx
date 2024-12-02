@@ -36,6 +36,7 @@ const HandleAlbumModal: React.FC<HandleAlbumModalProps> = ({
         </span>
         <TextInput
           label="Title"
+          aria-label="Provide a title"
           value={albumTitle}
           onChange={(val) => setAlbumTitle(val.target.value)}
           placeholder="Provide a title for your album"

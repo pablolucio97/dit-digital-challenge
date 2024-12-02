@@ -41,6 +41,7 @@ const PhotoCard: React.FC<PhotoCardProps> = ({
       <img
         className="w-full aspect-video rounded-md transition ease-in-out"
         src={url}
+        alt={title}
       />
       <div className="flex flex-col w-full">
         <div className="w-full flex flex-col my-2">

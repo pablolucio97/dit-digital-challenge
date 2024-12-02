@@ -47,12 +47,14 @@ const HandlePhotoModal: React.FC<HandlePhotoModalProps> = ({
         </span>
         <TextInput
           label="Title"
+          aria-label="Provide a title"
           value={photoTitle}
           onChange={(val) => setPhotoTitle(val.target.value)}
           placeholder="Provide a title for your photo"
         />
         <TextInput
           label="Description"
+          aria-label="Provide a description"
           value={photoDescription}
           onChange={(val) => setPhotoDescription(val.target.value)}
           placeholder="Provide a title for your photo (not mandatory)"
@@ -61,6 +63,7 @@ const HandlePhotoModal: React.FC<HandlePhotoModalProps> = ({
         {mode === "create" && (
           <SelectInput
             label="Pick an option"
+            aria-label="Pick an option"
             options={urlOptions}
             setSelectedOption={setSelectedUrlOption}
           />
