@@ -1,4 +1,4 @@
-import { UserDTO } from '../DTOs/usersDTO';
+import { UserDTO } from '../../DTOs/usersDTO';
 
 export interface UsersRepository {
   listUsers(): Promise<UserDTO[]>;
